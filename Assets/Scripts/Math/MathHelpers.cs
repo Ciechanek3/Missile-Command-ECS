@@ -6,28 +6,17 @@ namespace Math
 {
     public static class MathHelpers
     {
-        public static NativeArray<float2> TransformsToFloat2(Transform[] transforms)
+        public static float3 TransformsToFloat3(Transform transform)
         {
-            NativeArray<float2> convertedTransforms = new NativeArray<float2>();
-            for (int i = 0; i < transforms.Length; i++)
-            {
-                float2 convertedTransform = new float2(transforms[i].position.x, transforms[i].position.y);
-                convertedTransforms[i] = convertedTransform;
-            }
-
-            return convertedTransforms;
+            float3 convertedTransform = new float3(transform.position.x, transform.position.y, 0);
+            return convertedTransform;
         }
 
-        public static float3 Float2ToFloat3(float2 f, float multiplier = 1f)
+        public static float GetDirection(float3 objectPosition, float3 targetPosition)
         {
-            float3 f3 = new float3()
-            {
-                x = f.x * multiplier,
-                y = f.y * multiplier,
-                z = 0
-            };
-
-            return f3;
+            var x = objectPosition.x - targetPosition.x;
+            var y = objectPosition.y - targetPosition.y;
+            return math.atan2(x, y) + math.PI;
         }
     }
 }

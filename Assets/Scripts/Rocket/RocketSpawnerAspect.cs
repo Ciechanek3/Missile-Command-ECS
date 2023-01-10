@@ -17,11 +17,9 @@ namespace Rocket.Aspect
         private readonly RefRO<RocketSpawnerProperties> _rocketSpawnerProperties;
         private readonly RefRW<RocketSpawnerRandom> _rocketSpawnerRandom;
         private readonly RefRW<RocketSpawnTimer> _rocketSpawnTimer;
-        private readonly RefRO<CityProperties> _cityProperties;
 
         public float SpawnDelay => _rocketSpawnerProperties.ValueRO.SpawnDelay;
         public int SpawnPoolNumber => _rocketSpawnerProperties.ValueRO.SpawnPoolNumber;
-        public NativeArray<float2> BuildingPlaces => _cityProperties.ValueRO.BuildingsPlaces;
 
         public float RocketSpawnTimer
         {
@@ -54,18 +52,19 @@ namespace Rocket.Aspect
         public float3 GetRandomRocketDestination()
         {
             float3 destination =
-                MathHelpers.Float2ToFloat3(
-                    BuildingPlaces[_rocketSpawnerRandom.ValueRW.Seed.NextInt(BuildingPlaces.Length)]);
+                MathHelpers.TransformsToFloat3(
+                    City.City.Instance.GetRandomBuildingTransform());
 
             return destination;
         }
 
         public UniformScaleTransform GetRandomRocketSpawn()
         {
+            var startingPosition = GetRandomRocketSpawnPoint();
             return new UniformScaleTransform()
             {
                 Position = GetRandomRocketSpawnPoint(),
-                Rotation = quaternion.identity,
+                Rotation = quaternion.RotateZ(MathHelpers.GetDirection(GetRandomRocketSpawnPoint(),GetRandomRocketDestination())),
                 Scale = 1f
             };
         }
