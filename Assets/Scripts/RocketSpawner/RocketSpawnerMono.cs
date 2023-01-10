@@ -8,21 +8,19 @@ namespace Rocket
     public class RocketSpawnerMono : MonoBehaviour
     {
         public float2 spawnArea;
-        public float speed;
         public GameObject rocketPrefab;
         public int spawnPoolNumber;
         public uint randomSeed;
         public float spawnDelay;
     }
     
-    public class RocketBaker : Baker<RocketSpawnerMono>
+    public class RocketSpawnerBaker : Baker<RocketSpawnerMono>
     {
         public override void Bake(RocketSpawnerMono authoring)
         {
             AddComponent(new RocketSpawnerProperties
             {
                 SpawnArea = authoring.spawnArea,
-                Speed = authoring.speed,
                 RocketPrefab =  GetEntity(authoring.rocketPrefab),
                 SpawnPoolNumber = authoring.spawnPoolNumber,
                 SpawnDelay = authoring.spawnDelay

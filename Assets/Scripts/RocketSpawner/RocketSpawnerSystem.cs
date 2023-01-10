@@ -1,14 +1,8 @@
-using City;
-using Rocket.Aspect;
+using Rocket;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Rendering;
-using Unity.Transforms;
-using UnityEngine;
-using UnityEngine.Rendering;
 
-namespace Rocket
+namespace RocketSpawner
 {
     [BurstCompile]
     [UpdateInGroup(typeof(InitializationSystemGroup))]

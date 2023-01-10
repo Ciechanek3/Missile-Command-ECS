@@ -1,13 +1,10 @@
-using System;
-using City;
 using Math;
-using Unity.Collections;
+using Rocket;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
-namespace Rocket.Aspect
+namespace RocketSpawner
 {
     public readonly partial struct RocketSpawnerAspect : IAspect
     {
@@ -29,9 +26,8 @@ namespace Rocket.Aspect
         
         public bool ShouldSpawnNewRocket => RocketSpawnTimer <= 0f;
         public Entity RocketPrefab => _rocketSpawnerProperties.ValueRO.RocketPrefab;
-        //public 
-        
-        
+
+
         private float3 HalfSpawnArea => new()
         {
             x = _rocketSpawnerProperties.ValueRO.SpawnArea.x * 0.5f,

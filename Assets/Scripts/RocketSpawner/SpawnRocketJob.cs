@@ -1,9 +1,8 @@
-using Rocket.Aspect;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 
-namespace Rocket
+namespace RocketSpawner
 {
     [BurstCompile]
     public partial struct SpawnRocketJob : IJobEntity
@@ -16,7 +15,7 @@ namespace Rocket
         {
             spawner.RocketSpawnTimer -= DeltaTime;
             if (spawner.ShouldSpawnNewRocket == false) return;
-
+            
             spawner.RocketSpawnTimer = spawner.SpawnDelay;
             var newRocket = Ecb.Instantiate(spawner.RocketPrefab);
             Ecb.SetComponent(newRocket, new LocalToWorldTransform{ Value = USTransform});
