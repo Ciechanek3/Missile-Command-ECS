@@ -3,6 +3,7 @@ using Rocket;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace RocketSpawner
 {
@@ -57,10 +58,11 @@ namespace RocketSpawner
         public UniformScaleTransform GetRandomRocketSpawn()
         {
             var startingPosition = GetRandomRocketSpawnPoint();
+            float rotation = MathHelpers.GetDirection(startingPosition, GetRandomRocketDestination());
             return new UniformScaleTransform()
             {
-                Position = GetRandomRocketSpawnPoint(),
-                Rotation = quaternion.RotateZ(MathHelpers.GetDirection(GetRandomRocketSpawnPoint(),GetRandomRocketDestination())),
+                Position = startingPosition,
+                Rotation = quaternion.RotateZ(-rotation),
                 Scale = 1f
             };
         }

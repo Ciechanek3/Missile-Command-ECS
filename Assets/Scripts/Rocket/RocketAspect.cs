@@ -14,7 +14,6 @@ namespace Rocket
         private float MovementSpeed => _rocketBehavior.ValueRO.Speed;
         public void Move(float speedMultiplier, float deltaTime)
         {
-            Debug.Log(speedMultiplier);
             _transformAspect.Position += _transformAspect.Up * MovementSpeed * speedMultiplier * deltaTime;
         }
     }

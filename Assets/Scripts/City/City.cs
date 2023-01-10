@@ -8,7 +8,7 @@ namespace City
     {
         [SerializeField] private Transform[] buildings;
 
-        public static City Instance;   
+        public static City Instance;
         
         private void Awake() 
         {

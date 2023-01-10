@@ -148,7 +148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1061677025}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.03, y: 3.48, z: 0}
+  m_LocalPosition: {x: 0.03, y: 3.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -168,9 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnArea:
-    x: 20
-    y: 2
-  speed: 2
+    x: 0
+    y: 0
   rocketPrefab: {fileID: 1682093817210220774, guid: e2075a048b27cb1499b4d1ee6a2e70be, type: 3}
   spawnPoolNumber: 50
   randomSeed: 100
