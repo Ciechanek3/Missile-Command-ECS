@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-public class RocketMono : MonoBehaviour
+public class RocketAuthoring : MonoBehaviour
 {
     public float defaultSpeed;
 }
 
-public class RocketBaker : Baker<RocketMono>
+public class RocketBaker : Baker<RocketAuthoring>
 {
-    public override void Bake(RocketMono authoring)
+    public override void Bake(RocketAuthoring authoring)
     {
         AddComponent(new RocketBehavior
         {

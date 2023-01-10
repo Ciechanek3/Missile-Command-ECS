@@ -5,7 +5,7 @@ using Random = Unity.Mathematics.Random;
 
 namespace Rocket
 {
-    public class RocketSpawnerMono : MonoBehaviour
+    public class RocketSpawnerAuthoring : MonoBehaviour
     {
         public float2 spawnArea;
         public GameObject rocketPrefab;
@@ -14,9 +14,9 @@ namespace Rocket
         public float spawnDelay;
     }
     
-    public class RocketSpawnerBaker : Baker<RocketSpawnerMono>
+    public class RocketSpawnerBaker : Baker<RocketSpawnerAuthoring>
     {
-        public override void Bake(RocketSpawnerMono authoring)
+        public override void Bake(RocketSpawnerAuthoring authoring)
         {
             AddComponent(new RocketSpawnerProperties
             {
