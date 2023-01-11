@@ -1,9 +1,10 @@
 using Math;
 using Rocket;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace RocketSpawner
 {
@@ -27,6 +28,8 @@ namespace RocketSpawner
         public bool ShouldSpawnNewRocket => RocketSpawnTimer <= 0f;
         public Entity RocketPrefab => _rocketSpawnerProperties.ValueRO.RocketPrefab;
 
+        public NativeList<float3> Targets => _rocketSpawnerProperties.ValueRO.Targets;
+
 
         private float3 HalfSpawnArea => new()
         {
@@ -47,10 +50,8 @@ namespace RocketSpawner
 
         public float3 GetRandomRocketDestination()
         {
-            float3 destination =
-                MathHelpers.TransformsToFloat3(
-                    City.City.Instance.GetRandomBuildingTransform());
-
+            int randomIndex = Random.Range(0, Targets.Length);
+            float3 destination = Targets[randomIndex];
             return destination;
         }
 
