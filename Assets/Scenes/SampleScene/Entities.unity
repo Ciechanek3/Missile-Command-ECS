@@ -167,6 +167,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acc4e35da9735f144829be28b4a07058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targets:
+  - x: -8
+    y: 0
+  - x: -6
+    y: 0
+  - x: -4
+    y: 0
+  - x: -2
+    y: 0
+  - x: 0
+    y: 0
+  - x: 2
+    y: 0
+  - x: 4
+    y: 0
+  - x: 6
+    y: 0
+  - x: 8
+    y: 0
   spawnArea:
     x: 0
     y: 0
