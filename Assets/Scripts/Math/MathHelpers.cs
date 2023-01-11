@@ -28,9 +28,9 @@ namespace Math
 
         public static bool CheckIfFloatIsInArea(float3 objectPosition, float3 targetPosition, float2 offset)
         {
-            if (objectPosition.x - targetPosition.x <= offset.x)
+            if (objectPosition.x - targetPosition.x <= offset.x && objectPosition.x - targetPosition.x >= -offset.x)
             {
-                if (objectPosition.y - targetPosition.y <= offset.y)
+                if (objectPosition.y - targetPosition.y <= offset.y && objectPosition.y - targetPosition.y >= -offset.y )
                 {
                     return true;
                 }

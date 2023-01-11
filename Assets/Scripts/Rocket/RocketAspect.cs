@@ -7,8 +7,8 @@ namespace Rocket
     public readonly partial struct RocketAspect : IAspect
     {
         public readonly Entity Entity;
-
         public readonly TransformAspect TransformAspect;
+        
         private readonly RefRO<RocketBehavior> _rocketBehavior;
 
         private float MovementSpeed => _rocketBehavior.ValueRO.Speed;

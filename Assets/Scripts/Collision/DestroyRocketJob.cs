@@ -1,12 +1,14 @@
+using City;
 using Math;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 
 namespace Collision
 {
     [BurstCompile]
-    public partial struct DestroyEntityJob : IJobEntity
+    public partial struct DestroyRocketJob : IJobEntity
     {
         public EntityCommandBuffer Ecb;
         public Entity Entity;
@@ -20,6 +22,7 @@ namespace Collision
             if (MathHelpers.CheckIfFloatIsInArea(EntityPosition, TargetPosition, Offset))
             {
                 Ecb.DestroyEntity(Entity);
+                
             }
         }
     }
