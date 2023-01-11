@@ -8,13 +8,13 @@ namespace Rocket
     {
         public readonly Entity Entity;
 
-        private readonly TransformAspect _transformAspect;
+        public readonly TransformAspect TransformAspect;
         private readonly RefRO<RocketBehavior> _rocketBehavior;
 
         private float MovementSpeed => _rocketBehavior.ValueRO.Speed;
         public void Move(float speedMultiplier, float deltaTime)
         {
-            _transformAspect.Position += _transformAspect.Up * MovementSpeed * speedMultiplier * deltaTime;
+            TransformAspect.Position += TransformAspect.Up * MovementSpeed * speedMultiplier * deltaTime;
         }
     }
 }

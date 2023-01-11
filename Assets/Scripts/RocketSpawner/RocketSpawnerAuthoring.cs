@@ -12,6 +12,7 @@ namespace Rocket
     public class RocketSpawnerAuthoring : MonoBehaviour
     {
         public List<Transform> targets;
+        public float2 targetsOffset;
         public float2 spawnArea;
         public GameObject rocketPrefab;
         public uint randomSeed;
@@ -41,6 +42,7 @@ namespace Rocket
             AddComponent(new TargetsData
             {
                 Targets = targets,
+                TargetsOffset = authoring.targetsOffset
             });
         }
     }

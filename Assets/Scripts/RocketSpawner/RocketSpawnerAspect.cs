@@ -31,6 +31,7 @@ namespace RocketSpawner
         public Entity RocketPrefab => _rocketSpawnerProperties.ValueRO.RocketPrefab;
 
         public NativeList<float3> Targets => _targetsData.ValueRO.Targets;
+        public float2 TargetsOffset => _targetsData.ValueRO.TargetsOffset;
 
 
         private float3 HalfSpawnArea => new()
