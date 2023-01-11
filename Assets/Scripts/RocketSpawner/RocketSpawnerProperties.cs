@@ -8,7 +8,6 @@ namespace Rocket
     {
         public float2 SpawnArea;
         public Entity RocketPrefab;
-        public int SpawnPoolNumber;
         public float SpawnDelay;
     }
 }

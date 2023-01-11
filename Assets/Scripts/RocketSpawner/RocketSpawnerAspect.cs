@@ -52,7 +52,7 @@ namespace RocketSpawner
 
         public float3 GetRandomRocketDestination()
         {
-            int randomIndex = Random.Range(0, Targets.Length);
+            int randomIndex = _rocketSpawnerRandom.ValueRW.Seed.NextInt(0, Targets.Length);
             float3 destination = Targets[randomIndex];
             return destination;
         }

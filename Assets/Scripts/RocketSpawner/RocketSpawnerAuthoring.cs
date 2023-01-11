@@ -14,7 +14,6 @@ namespace Rocket
         public List<Transform> targets;
         public float2 spawnArea;
         public GameObject rocketPrefab;
-        public int spawnPoolNumber;
         public uint randomSeed;
         public float spawnDelay;
     }
@@ -32,7 +31,6 @@ namespace Rocket
             {
                 SpawnArea = authoring.spawnArea,
                 RocketPrefab =  GetEntity(authoring.rocketPrefab),
-                SpawnPoolNumber = authoring.spawnPoolNumber,
                 SpawnDelay = authoring.spawnDelay
             });
             AddComponent(new RocketSpawnerRandom
