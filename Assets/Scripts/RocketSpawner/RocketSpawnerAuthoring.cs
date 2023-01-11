@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using City;
 using Math;
 using Unity.Collections;
 using Unity.Entities;
@@ -29,7 +30,6 @@ namespace Rocket
             }
             AddComponent(new RocketSpawnerProperties
             {
-                Targets = targets,
                 SpawnArea = authoring.spawnArea,
                 RocketPrefab =  GetEntity(authoring.rocketPrefab),
                 SpawnPoolNumber = authoring.spawnPoolNumber,
@@ -40,6 +40,10 @@ namespace Rocket
                 Seed = Random.CreateFromIndex(authoring.randomSeed)
             });
             AddComponent<RocketSpawnTimer>();
+            AddComponent(new TargetsData
+            {
+                Targets = targets,
+            });
         }
     }
 }

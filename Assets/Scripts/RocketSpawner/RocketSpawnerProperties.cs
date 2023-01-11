@@ -6,7 +6,6 @@ namespace Rocket
 {
     public struct RocketSpawnerProperties : IComponentData
     {
-        public NativeList<float3> Targets;
         public float2 SpawnArea;
         public Entity RocketPrefab;
         public int SpawnPoolNumber;

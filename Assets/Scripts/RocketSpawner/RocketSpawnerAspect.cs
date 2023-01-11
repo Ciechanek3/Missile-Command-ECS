@@ -1,3 +1,4 @@
+using City;
 using Math;
 using Rocket;
 using Unity.Collections;
@@ -14,6 +15,7 @@ namespace RocketSpawner
 
         private readonly TransformAspect _transformAspect;
         private readonly RefRO<RocketSpawnerProperties> _rocketSpawnerProperties;
+        private readonly RefRO<TargetsData> _targetsData;
         private readonly RefRW<RocketSpawnerRandom> _rocketSpawnerRandom;
         private readonly RefRW<RocketSpawnTimer> _rocketSpawnTimer;
 
@@ -28,7 +30,7 @@ namespace RocketSpawner
         public bool ShouldSpawnNewRocket => RocketSpawnTimer <= 0f;
         public Entity RocketPrefab => _rocketSpawnerProperties.ValueRO.RocketPrefab;
 
-        public NativeList<float3> Targets => _rocketSpawnerProperties.ValueRO.Targets;
+        public NativeList<float3> Targets => _targetsData.ValueRO.Targets;
 
 
         private float3 HalfSpawnArea => new()
