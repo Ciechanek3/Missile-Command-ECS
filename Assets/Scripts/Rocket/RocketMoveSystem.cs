@@ -1,3 +1,4 @@
+using RocketSpawner;
 using Unity.Burst;
 using Unity.Entities;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 namespace Rocket
 {
     [BurstCompile]
+    [UpdateAfter(typeof(RocketSpawnerSystem))]
     public partial struct RocketMoveSystem : ISystem
     {
         [BurstCompile]
