@@ -9,7 +9,7 @@ namespace Rocket
         public readonly Entity Entity;
         public readonly TransformAspect TransformAspect;
         
-        private readonly RefRO<RocketBehavior> _rocketBehavior;
+        private readonly RefRO<RocketProperties> _rocketBehavior;
 
         private float MovementSpeed => _rocketBehavior.ValueRO.Speed;
         public void Move(float speedMultiplier, float deltaTime)

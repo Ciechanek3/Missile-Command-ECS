@@ -12,7 +12,7 @@ public class RocketBaker : Baker<RocketAuthoring>
 {
     public override void Bake(RocketAuthoring authoring)
     {
-        AddComponent(new RocketBehavior
+        AddComponent(new RocketProperties
         {
             Speed = authoring.defaultSpeed
         });
