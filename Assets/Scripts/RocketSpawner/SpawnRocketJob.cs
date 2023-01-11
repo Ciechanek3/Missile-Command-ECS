@@ -11,6 +11,7 @@ namespace RocketSpawner
         public EntityCommandBuffer Ecb;
         public UniformScaleTransform USTransform;
         
+        [BurstCompile]
         private void Execute(RocketSpawnerAspect spawner)
         {
             spawner.RocketSpawnTimer -= DeltaTime;
