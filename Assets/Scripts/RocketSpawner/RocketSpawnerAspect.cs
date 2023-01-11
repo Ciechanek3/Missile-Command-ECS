@@ -17,7 +17,6 @@ namespace RocketSpawner
         private readonly RefRW<RocketSpawnTimer> _rocketSpawnTimer;
 
         public float SpawnDelay => _rocketSpawnerProperties.ValueRO.SpawnDelay;
-        public int SpawnPoolNumber => _rocketSpawnerProperties.ValueRO.SpawnPoolNumber;
 
         public float RocketSpawnTimer
         {

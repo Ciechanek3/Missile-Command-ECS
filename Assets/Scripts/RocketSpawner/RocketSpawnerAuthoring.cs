@@ -9,7 +9,7 @@ namespace Rocket
 {
     public class RocketSpawnerAuthoring : MonoBehaviour
     {
-        public List<float2> targets;
+        public List<float3> targets;
         public float2 spawnArea;
         public GameObject rocketPrefab;
         public int spawnPoolNumber;
