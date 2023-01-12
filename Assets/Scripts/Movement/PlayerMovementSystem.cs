@@ -1,10 +1,8 @@
+using System;
 using Marker;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEditor.Timeline.Actions;
-using UnityEngine;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Movement
 {
@@ -12,24 +10,31 @@ namespace Movement
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class PlayerMovementSystem : SystemBase
     {
-        private PlayerMovement movement;
+        private PlayerMovement _movement;
 
+        protected override void OnCreate()
+        {
+            EntityManager.AddComponent<InputData>(SystemHandle);
+        }
+        [BurstCompile]
         protected override void OnUpdate()
         {
-            if (movement == null)
+            if (_movement == null)
             {
-                movement = new PlayerMovement();
-                movement.movement.Enable();
+                _movement = new PlayerMovement();
+                _movement.movement.Enable();
             }
-            UnityEngine.Vector2 moveVector = movement.movement.Move.ReadValue<UnityEngine.Vector2>();
+
+            
+            UnityEngine.Vector2 moveVector = _movement.movement.Move.ReadValue<UnityEngine.Vector2>();
             float hAxis = moveVector.x;
             float vAxis = moveVector.y;
-            float spaceKey = movement.movement.Shoot.ReadValue<float>();
-            
-            new MoveJob
-            {
-                Direction = new float2(hAxis, vAxis)
-            }.Run();
+            float spaceKey = _movement.movement.Shoot.ReadValue<float>();
+
+            Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
+            var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
+
+            inputAspect.ModifyMovement(new float2(moveVector.x, moveVector.y));
         }
     }
     

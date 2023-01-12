@@ -15,11 +15,13 @@ namespace Collision
     [UpdateAfter(typeof(RocketMoveSystem))]
     public partial struct RocketCollisionSystem : ISystem
     {
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
         
         }
 
+        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
         
