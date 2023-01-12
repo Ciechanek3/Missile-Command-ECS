@@ -11,6 +11,8 @@ namespace Projectile
 
         private readonly RefRO<ProjectileProperties> _projectileProperties;
 
+        
+        
         public void Fire(float2 destination)
         {
             TransformAspect.TranslateWorld(new float3(destination.x, destination.y, 0));

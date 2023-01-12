@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using Math;
+using Marker;
 using Movement;
-using RocketSpawner;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -11,7 +9,7 @@ using UnityEngine;
 namespace MissileLauncher
 {
     [BurstCompile]
-    [UpdateAfter(typeof(RocketSpawnerSystem))]
+    [UpdateAfter(typeof(MarkerSystem))]
     public partial class MissileLauncherSystem : SystemBase
     {
         private bool _isListCreated = false;
@@ -25,10 +23,14 @@ namespace MissileLauncher
                 _isListCreated = true;
                 foreach (var ml in SystemAPI.Query<MissileLauncherAspect>())
                 {
+                    Debug.Log("ml");
                     msa.Add(ml);
                 }
 
-                currentMissileLauncher = msa[1];
+                if (msa.Count == 3)
+                {
+                    currentMissileLauncher = msa[1];
+                }
             }
             
             
@@ -41,11 +43,10 @@ namespace MissileLauncher
             new FireProjectile
             {
                 DeltaTime = deltaTime,
-                Cooldown = currentMissileLauncher.Cooldown,
-                InitialAmmo = currentMissileLauncher.InitialAmmo,
+                MissileLauncher = currentMissileLauncher,
                 Ecb = ecbSingleton.CreateCommandBuffer(World.Unmanaged),
                 USTransform = currentMissileLauncher.GetMissileSpawnPoint(),
-            };
+            }.Run();
 
         }
     }
@@ -54,19 +55,18 @@ namespace MissileLauncher
     public partial struct FireProjectile : IJobEntity
     {
         public float DeltaTime;
-        public float Cooldown;
-        public float InitialAmmo;
+        public MissileLauncherAspect MissileLauncher;
         public EntityCommandBuffer Ecb;
         public UniformScaleTransform USTransform;
         
         [BurstCompile]
-        private void Execute(RocketSpawnerAspect spawner)
+        private void Execute()
         {
-            spawner.RocketSpawnTimer -= DeltaTime;
-            if (spawner.ShouldSpawnNewRocket == false) return;
-            
-            spawner.RocketSpawnTimer = spawner.SpawnDelay;
-            var newRocket = Ecb.Instantiate(spawner.RocketPrefab);
+            MissileLauncher.ProjectileSpawnTimer -= DeltaTime;
+            if (MissileLauncher.ShouldSpawnNewProjectile == false) return;
+            if (MissileLauncher.Fire() == false) return;
+            MissileLauncher.ProjectileSpawnTimer = MissileLauncher.Cooldown;
+            var newRocket = Ecb.Instantiate(MissileLauncher.ProjectileEntity);
             Ecb.SetComponent(newRocket, new LocalToWorldTransform{ Value = USTransform});
         }
     }

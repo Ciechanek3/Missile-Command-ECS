@@ -15,10 +15,10 @@ namespace RocketSpawner
         [BurstCompile]
         private void Execute(RocketSpawnerAspect spawner)
         {
-            spawner.RocketSpawnTimer -= DeltaTime;
+            spawner.ProjectileSpawnTimer -= DeltaTime;
             if (spawner.ShouldSpawnNewRocket == false) return;
             
-            spawner.RocketSpawnTimer = spawner.SpawnDelay;
+            spawner.ProjectileSpawnTimer = spawner.SpawnDelay;
             var newRocket = Ecb.Instantiate(spawner.RocketPrefab);
             Ecb.SetComponent(newRocket, new LocalToWorldTransform{ Value = USTransform});
         }

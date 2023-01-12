@@ -5,7 +5,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Random = UnityEngine.Random;
 
 namespace RocketSpawner
 {
@@ -17,17 +16,17 @@ namespace RocketSpawner
         private readonly RefRO<RocketSpawnerProperties> _rocketSpawnerProperties;
         private readonly RefRO<TargetsData> _targetsData;
         private readonly RefRW<RocketSpawnerRandom> _rocketSpawnerRandom;
-        private readonly RefRW<RocketSpawnTimer> _rocketSpawnTimer;
+        private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
 
         public float SpawnDelay => _rocketSpawnerProperties.ValueRO.SpawnDelay;
 
-        public float RocketSpawnTimer
+        public float ProjectileSpawnTimer
         {
-            get => _rocketSpawnTimer.ValueRO.Timer;
-            set => _rocketSpawnTimer.ValueRW.Timer = value;
+            get => _projectileSpawnTimer.ValueRO.Timer;
+            set => _projectileSpawnTimer.ValueRW.Timer = value;
         }
         
-        public bool ShouldSpawnNewRocket => RocketSpawnTimer <= 0f;
+        public bool ShouldSpawnNewRocket => ProjectileSpawnTimer <= 0f;
         public Entity RocketPrefab => _rocketSpawnerProperties.ValueRO.RocketPrefab;
 
         public NativeList<float3> Targets => _targetsData.ValueRO.Targets;

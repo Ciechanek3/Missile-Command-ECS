@@ -27,7 +27,6 @@ namespace Marker
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
             var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
             
-            Debug.Log(1);
             new MoveJob
             {
                 Direction = inputAspect.Movement

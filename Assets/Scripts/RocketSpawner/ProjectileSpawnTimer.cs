@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace Rocket
 {
-    public struct RocketSpawnTimer : IComponentData
+    public struct ProjectileSpawnTimer : IComponentData
     {
         public float Timer;
     }

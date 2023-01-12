@@ -1,4 +1,5 @@
 using MissileLauncher;
+using Rocket;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -8,6 +9,7 @@ namespace Math
 {
     public class MissileLauncherAuthoring : MonoBehaviour
     {
+        public GameObject projectilePrefab;
         public Transform firePosition;
         public float cooldown;
         public int initialAmmo;
@@ -21,8 +23,16 @@ namespace Math
             AddComponent(new MissileLauncherProperties
             {
                 FirePosition = new float2(position.x, position.y),
+                ProjectilePrefab = GetEntity(authoring.projectilePrefab),
                 Cooldown = authoring.cooldown,
-                InitialAmmo = authoring.initialAmmo
+            });
+            AddComponent(new ProjectileSpawnTimer
+            {
+                Timer = authoring.cooldown
+            });
+            AddComponent(new AmmoCounter
+            {
+                Ammo = authoring.initialAmmo
             });
         }
     }
