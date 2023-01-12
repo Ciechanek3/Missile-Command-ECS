@@ -9,7 +9,6 @@ using UnityEngine;
 public class ProjectileAuthoring : MonoBehaviour
 {
     public float movementSpeed;
-    public float shootCooldown;
 }
 
 public class ProjectileBaker : Baker<ProjectileAuthoring>
@@ -19,10 +18,6 @@ public class ProjectileBaker : Baker<ProjectileAuthoring>
         AddComponent(new ProjectileProperties
         {
             MovementSpeed = authoring.movementSpeed
-        });
-        AddComponent(new ProjectileSpawnTimer
-        {
-            Timer = authoring.shootCooldown
         });
     }
 }

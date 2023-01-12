@@ -20,13 +20,15 @@ namespace MissileLauncher
         [BurstCompile]
         protected override void OnUpdate()
         {
-            if (_isListCreated == false)
-            {
-                ChangeActiveLauncher(1);
-            }
-
             var deltaTime = SystemAPI.Time.DeltaTime;
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
+            var ecb = ecbSingleton.CreateCommandBuffer(World.Unmanaged);
+            
+            if (_isListCreated == false)
+            {
+                _isListCreated = true;
+                ChangeActiveLauncher(ecb, 1);
+            }
             
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
             var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
@@ -39,31 +41,39 @@ namespace MissileLauncher
                 USTransform = currentMissileLauncher.GetMissileSpawnPoint(),
             }.Run();*/
 
+            List<MissileLauncherAspect> tempMissileLaunchers = new List<MissileLauncherAspect>();
+            Debug.Log("!");
             foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>().WithAll<ActiveLauncherTag>())
             {
-                missileLauncher.Fire();
+                tempMissileLaunchers.Add(missileLauncher);
+                
+                missileLauncher.FireProjectile(ecb, deltaTime);
             }
+            Debug.Log(tempMissileLaunchers.Count);
+            tempMissileLaunchers.Clear();
         }
         
-        public void ChangeActiveLauncher(int index)
+        public void ChangeActiveLauncher(EntityCommandBuffer ecbSingleton,int index)
         {
             List<MissileLauncherAspect> missileLauncherAspects = new List<MissileLauncherAspect>();
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
-            _isListCreated = true;
             foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>())
             {
+                ecbSingleton.RemoveComponent<ActiveLauncherTag>(missileLauncher.Entity);
                 missileLauncherAspects.Add(missileLauncher);
             }
                 
-            ecb.AddComponent<ActiveLauncherTag>(missileLauncherAspects[1].Entity);
-            ecb.Playback(EntityManager);
+            ecbSingleton.AddComponent<ActiveLauncherTag>(missileLauncherAspects[index].Entity);
         }
     }
     
-    [BurstCompile]
+    /*[BurstCompile]
     public partial struct FireProjectile : IJobEntity
     {
         public float DeltaTime;
+        public float ProjectileSpawnTimer;
+        public bool ShouldSpawnNewProjectile;
+        public bool CanFire;
+        public bool Cooldown;
         public MissileLauncherAspect MissileLauncher;
         public EntityCommandBuffer Ecb;
         public UniformScaleTransform USTransform;
@@ -77,8 +87,9 @@ namespace MissileLauncher
             MissileLauncher.ProjectileSpawnTimer = MissileLauncher.Cooldown;
             var newRocket = Ecb.Instantiate(MissileLauncher.ProjectileEntity);
             Ecb.SetComponent(newRocket, new LocalToWorldTransform{ Value = USTransform});
+            Ecb.Playback(new EntityManager());
         }
-    }
+    }*/
     
     
     

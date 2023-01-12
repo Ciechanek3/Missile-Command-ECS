@@ -43,6 +43,16 @@ namespace MissileLauncher
             return true;
         }
 
+        public void FireProjectile(EntityCommandBuffer ecb, float deltaTime)
+        {
+            ProjectileSpawnTimer -= deltaTime;
+            if (ShouldSpawnNewProjectile == false) return;
+            if (Fire() == false) return;
+            ProjectileSpawnTimer = Cooldown;
+            var newProjectile = ecb.Instantiate(ProjectileEntity);
+            ecb.SetComponent(newProjectile, new LocalToWorldTransform{ Value = GetMissileSpawnPoint()});
+        }
+
         public Entity ProjectileEntity => _missileLauncherProperties.ValueRO.ProjectilePrefab;
         
         public UniformScaleTransform GetMissileSpawnPoint()
