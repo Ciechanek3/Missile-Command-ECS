@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using Marker;
+using Math;
 using Movement;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MissileLauncher
@@ -14,40 +17,46 @@ namespace MissileLauncher
     {
         private bool _isListCreated = false;
         private MissileLauncherAspect currentMissileLauncher;
-        List<MissileLauncherAspect> msa = new List<MissileLauncherAspect>();
         [BurstCompile]
         protected override void OnUpdate()
         {
             if (_isListCreated == false)
             {
-                _isListCreated = true;
-                foreach (var ml in SystemAPI.Query<MissileLauncherAspect>())
-                {
-                    Debug.Log("ml");
-                    msa.Add(ml);
-                }
-
-                if (msa.Count == 3)
-                {
-                    currentMissileLauncher = msa[1];
-                }
+                ChangeActiveLauncher(1);
             }
-            
-            
+
             var deltaTime = SystemAPI.Time.DeltaTime;
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
             
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
             var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
 
-            new FireProjectile
+            /*new FireProjectile
             {
                 DeltaTime = deltaTime,
                 MissileLauncher = currentMissileLauncher,
                 Ecb = ecbSingleton.CreateCommandBuffer(World.Unmanaged),
                 USTransform = currentMissileLauncher.GetMissileSpawnPoint(),
-            }.Run();
+            }.Run();*/
 
+            foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>().WithAll<ActiveLauncherTag>())
+            {
+                missileLauncher.Fire();
+            }
+        }
+        
+        public void ChangeActiveLauncher(int index)
+        {
+            List<MissileLauncherAspect> missileLauncherAspects = new List<MissileLauncherAspect>();
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            _isListCreated = true;
+            foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>())
+            {
+                missileLauncherAspects.Add(missileLauncher);
+            }
+                
+            ecb.AddComponent<ActiveLauncherTag>(missileLauncherAspects[1].Entity);
+            ecb.Playback(EntityManager);
         }
     }
     
@@ -70,5 +79,7 @@ namespace MissileLauncher
             Ecb.SetComponent(newRocket, new LocalToWorldTransform{ Value = USTransform});
         }
     }
+    
+    
     
 }
