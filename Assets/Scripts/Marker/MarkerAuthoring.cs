@@ -14,10 +14,7 @@ namespace Marker
     {
         public override void Bake(MarkerAuthoring authoring)
         {
-            AddComponent(new MarkerProperties
-            {
-                MovementSpeed = authoring.movementSpeed
-            });
+            AddComponent<MarkerProperties>();
         }
     }
 }

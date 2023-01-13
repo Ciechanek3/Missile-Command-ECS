@@ -4,6 +4,6 @@ namespace Marker
 {
     public struct MarkerProperties : IComponentData
     {
-        public float MovementSpeed;
+        
     }
 }

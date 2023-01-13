@@ -11,12 +11,11 @@ namespace Marker
         public readonly TransformAspect TransformAspect;
 
         private readonly RefRO<MarkerProperties> _markerProperties;
-
-        private float GetMovementSpeed => _markerProperties.ValueRO.MovementSpeed;
+        public float2 Position => new float2(TransformAspect.Position.x, TransformAspect.Position.y);
 
         public void Move(float2 direction)
         {
-            TransformAspect.Position += new float3(direction.x, direction.y, 0) * GetMovementSpeed;
+            TransformAspect.Position += new float3(direction.x, direction.y, 0) * 0.05f;
             if (TransformAspect.Position.x >= 8.5)
             {
                 TransformAspect.Position = new float3(8.5f, TransformAspect.Position.y, 0);

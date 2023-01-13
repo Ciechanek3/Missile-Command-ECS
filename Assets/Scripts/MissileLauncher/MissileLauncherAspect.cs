@@ -1,3 +1,4 @@
+using Projectile;
 using Rocket;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -13,6 +14,7 @@ namespace MissileLauncher
 
         private readonly RefRO<MissileLauncherProperties> _missileLauncherProperties;
         private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
+        private readonly RefRW<TargetPositionProperty> _targetPositionProperty;
         private readonly RefRW<AmmoCounter> _ammoCounter;
 
         private float2 FirePosition => _missileLauncherProperties.ValueRO.FirePosition;
@@ -51,6 +53,10 @@ namespace MissileLauncher
             ProjectileSpawnTimer = Cooldown;
             var newProjectile = ecb.Instantiate(ProjectileEntity);
             ecb.SetComponent(newProjectile, new LocalToWorldTransform{ Value = GetMissileSpawnPoint()});
+            ecb.AddComponent(newProjectile, new TargetPositionProperty
+            {
+                Position = _targetPositionProperty.ValueRW.Position
+            });
         }
 
         public Entity ProjectileEntity => _missileLauncherProperties.ValueRO.ProjectilePrefab;
@@ -65,5 +71,26 @@ namespace MissileLauncher
                 Scale = 1f
             };
         }
+        
+            public void SetTarget(float2 direction)
+            {
+                _targetPositionProperty.ValueRW.Position += new float2(direction.x, direction.y) * 0.05f;
+                if (_targetPositionProperty.ValueRW.Position.x >= 8.5)
+                {
+                    _targetPositionProperty.ValueRW.Position = new float2(8.5f, _targetPositionProperty.ValueRW.Position.y);
+                }
+                if (_targetPositionProperty.ValueRW.Position.x <= -8.5)
+                {
+                    _targetPositionProperty.ValueRW.Position = new float2(-8.5f, _targetPositionProperty.ValueRW.Position.y);
+                }
+                if (_targetPositionProperty.ValueRW.Position.y <= -5)
+                {
+                    _targetPositionProperty.ValueRW.Position = new float2(_targetPositionProperty.ValueRW.Position.x, -5);
+                }
+                if (_targetPositionProperty.ValueRW.Position.y >= 5)
+                {
+                    _targetPositionProperty.ValueRW.Position = new float2(_targetPositionProperty.ValueRW.Position.x, 5);
+                }
+            }
     }
 }

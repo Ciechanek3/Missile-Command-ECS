@@ -5,54 +5,54 @@ using Movement;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace MissileLauncher
 {
-    [BurstCompile]
+    
     [UpdateAfter(typeof(MarkerSystem))]
     public partial class MissileLauncherSystem : SystemBase
     {
-        private bool _isListCreated = false;
+        private bool _isDataCreated = false;
         private MissileLauncherAspect currentMissileLauncher;
+        private MarkerAspect _markerAspect;
+        
         [BurstCompile]
         protected override void OnUpdate()
         {
             var deltaTime = SystemAPI.Time.DeltaTime;
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
             var ecb = ecbSingleton.CreateCommandBuffer(World.Unmanaged);
-            
-            if (_isListCreated == false)
+            if (_isDataCreated == false)
             {
-                _isListCreated = true;
+                _isDataCreated = true;
                 ChangeActiveLauncher(ecb, 1);
+                Entity markerProperties = SystemAPI.GetSingletonEntity<MarkerProperties>();
+                _markerAspect = SystemAPI.GetAspectRW<MarkerAspect>(markerProperties);
             }
-            
-            Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
-            var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
-
-            /*new FireProjectile
-            {
-                DeltaTime = deltaTime,
-                MissileLauncher = currentMissileLauncher,
-                Ecb = ecbSingleton.CreateCommandBuffer(World.Unmanaged),
-                USTransform = currentMissileLauncher.GetMissileSpawnPoint(),
-            }.Run();*/
 
             List<MissileLauncherAspect> tempMissileLaunchers = new List<MissileLauncherAspect>();
-            Debug.Log("!");
             foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>().WithAll<ActiveLauncherTag>())
             {
                 tempMissileLaunchers.Add(missileLauncher);
                 
                 missileLauncher.FireProjectile(ecb, deltaTime);
             }
-            Debug.Log(tempMissileLaunchers.Count);
             tempMissileLaunchers.Clear();
+            
+            Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
+            var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
+            
+            new MoveTargetJob
+            {
+                Direction = inputAspect.Movement
+            }.Run();
         }
         
+        [BurstCompile]
         public void ChangeActiveLauncher(EntityCommandBuffer ecbSingleton,int index)
         {
             List<MissileLauncherAspect> missileLauncherAspects = new List<MissileLauncherAspect>();

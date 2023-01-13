@@ -1,4 +1,5 @@
 using MissileLauncher;
+using Projectile;
 using Rocket;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -33,6 +34,10 @@ namespace Math
             AddComponent(new AmmoCounter
             {
                 Ammo = authoring.initialAmmo
+            });
+            AddComponent(new TargetPositionProperty
+            {
+                Position = new float2(0,0)
             });
         }
     }

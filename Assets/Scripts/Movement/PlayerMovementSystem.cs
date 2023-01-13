@@ -1,5 +1,5 @@
-using System;
 using Marker;
+using MissileLauncher;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -47,6 +47,18 @@ namespace Movement
         private void Execute(MarkerAspect marker)
         {
             marker.Move(Direction);
+        }
+    }
+  
+    [BurstCompile]
+    public partial struct MoveTargetJob : IJobEntity
+    {
+        public float2 Direction;
+
+        [BurstCompile]
+        private void Execute(MissileLauncherAspect missileLauncherAspect)
+        {
+            missileLauncherAspect.SetTarget(Direction);
         }
     }
 }

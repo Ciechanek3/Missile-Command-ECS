@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using Projectile;
-using Rocket;
 using Unity.Entities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProjectileAuthoring : MonoBehaviour
