@@ -7,7 +7,7 @@ namespace MissileLauncher
     public struct MissileLauncherProperties : IComponentData
     {
         public Entity ProjectilePrefab;
-        public NativeList<float2> Positions;
+        public float2 Position;
         public int Ammo;
         public float Cooldown;
     }

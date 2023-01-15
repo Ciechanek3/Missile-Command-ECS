@@ -11,7 +11,7 @@ namespace MissileLauncher
 {
     public class MissileLauncherAuthoring : MonoBehaviour
     {
-        public MissileLauncherData[] missileLaunchersData;
+        public Transform missileLauncherFirePosition;
         public GameObject projectilePrefab;
         public int initialAmmo;
         public float cooldown;
@@ -21,19 +21,12 @@ namespace MissileLauncher
     {
         public override void Bake(MissileLauncherAuthoring authoring)
         {
-            NativeList<float2> missileLaunchersFirePositions = new NativeList<float2>();
-            for (int i = 0; i < authoring.missileLaunchersData.Length; i++)
-            {
-                var position = authoring.missileLaunchersData[i].barrelTransform.position;
-                missileLaunchersFirePositions.Add(new float2(
-                    position.x,
-                    position.y));
-                
-            }
+            var position = authoring.missileLauncherFirePosition.position;
+            float2 positionValue = new float2(position.x, position.y);
             AddComponent(new MissileLauncherProperties
             {
                 ProjectilePrefab = GetEntity(authoring.projectilePrefab),
-                Positions = missileLaunchersFirePositions,
+                Position = positionValue,
                 Ammo = authoring.initialAmmo,
                 Cooldown = authoring.cooldown
             });
@@ -45,11 +38,5 @@ namespace MissileLauncher
             AddComponent<MissileLauncherIndex>();
             AddComponent<ProjectileSpawnTimer>();
         }
-    }
-
-    [System.Serializable]
-    public struct MissileLauncherData
-    {
-        public Transform barrelTransform;
     }
 }

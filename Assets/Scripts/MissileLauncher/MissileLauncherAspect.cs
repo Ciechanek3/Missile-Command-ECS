@@ -22,22 +22,12 @@ namespace MissileLauncher
         private readonly RefRW<MissileLauncherIndex> _missileLauncherIndex;
         private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
 
-        private NativeList<float2> FirePositions => _missileLauncherProperties.ValueRO.Positions;
+        private float2 FirePosition => _missileLauncherProperties.ValueRO.Position;
 
         private float2 TargetPosition
         {
             get => _targetPositionProperty.ValueRO.Position;
             set => _targetPositionProperty.ValueRW.Position = value;
-        }
-        public int CurrentLauncherIndex
-        {
-            get => _missileLauncherIndex.ValueRO.Index;
-            set => _missileLauncherIndex.ValueRW.Index = value;
-        }
-
-        public NativeList<float2> LaunchersFirePositions
-        {
-            get => _missileLauncherProperties.ValueRO.Positions;
         }
 
         public float Cooldown
@@ -88,8 +78,7 @@ namespace MissileLauncher
         
         public UniformScaleTransform GetMissileSpawnPoint()
         {
-            float3 startingPosition = new float3(LaunchersFirePositions[CurrentLauncherIndex].x, 
-                                                LaunchersFirePositions[CurrentLauncherIndex].y, 0);
+            float3 startingPosition = new float3(FirePosition.x, FirePosition.y, 0);
             return new UniformScaleTransform()
             {
                 Position = startingPosition,
@@ -98,11 +87,6 @@ namespace MissileLauncher
             };
         }
 
-        public void ChangeCurrentLauncher(int index)
-        {
-            CurrentLauncherIndex = index;
-        }
-        
         public void SetTarget(float2 direction)
             {
                 TargetPosition += new float2(direction.x, direction.y) * 0.05f;
