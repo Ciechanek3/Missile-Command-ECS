@@ -1,5 +1,9 @@
+using JetBrains.Annotations;
+using Movement;
 using Projectile;
 using Rocket;
+using RocketSpawner;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -18,7 +22,12 @@ namespace MissileLauncher
         private readonly RefRW<AmmoCounter> _ammoCounter;
 
         private float2 FirePosition => _missileLauncherProperties.ValueRO.FirePosition;
-        
+
+        private float2 TargetPosition
+        {
+            get => _targetPositionProperty.ValueRO.Position;
+            set => _targetPositionProperty.ValueRW.Position = value;
+        }
         public float ProjectileSpawnTimer
         {
             get => _projectileSpawnTimer.ValueRO.Timer;
@@ -45,10 +54,11 @@ namespace MissileLauncher
             return true;
         }
 
-        public void FireProjectile(EntityCommandBuffer ecb, float deltaTime)
+        public void FireProjectile(EntityCommandBuffer ecb, float deltaTime, InputAspect inputAspect)
         {
             ProjectileSpawnTimer -= deltaTime;
             if (ShouldSpawnNewProjectile == false) return;
+            if (inputAspect.Shooting == 0) return;
             if (Fire() == false) return;
             ProjectileSpawnTimer = Cooldown;
             var newProjectile = ecb.Instantiate(ProjectileEntity);
@@ -57,6 +67,7 @@ namespace MissileLauncher
             {
                 Position = _targetPositionProperty.ValueRW.Position
             });
+            
         }
 
         public Entity ProjectileEntity => _missileLauncherProperties.ValueRO.ProjectilePrefab;
@@ -72,25 +83,26 @@ namespace MissileLauncher
             };
         }
         
-            public void SetTarget(float2 direction)
+        public void SetTarget(float2 direction)
             {
-                _targetPositionProperty.ValueRW.Position += new float2(direction.x, direction.y) * 0.05f;
-                if (_targetPositionProperty.ValueRW.Position.x >= 8.5)
+                TargetPosition += new float2(direction.x, direction.y) * 0.05f;
+                if (TargetPosition.x >= 8.5)
                 {
-                    _targetPositionProperty.ValueRW.Position = new float2(8.5f, _targetPositionProperty.ValueRW.Position.y);
+                    TargetPosition = new float2(8.5f, TargetPosition.y);
                 }
-                if (_targetPositionProperty.ValueRW.Position.x <= -8.5)
+                if (TargetPosition.x <= -8.5)
                 {
-                    _targetPositionProperty.ValueRW.Position = new float2(-8.5f, _targetPositionProperty.ValueRW.Position.y);
+                    TargetPosition = new float2(-8.5f, TargetPosition.y);
                 }
-                if (_targetPositionProperty.ValueRW.Position.y <= -5)
+                if (TargetPosition.y <= -5)
                 {
-                    _targetPositionProperty.ValueRW.Position = new float2(_targetPositionProperty.ValueRW.Position.x, -5);
+                    TargetPosition = new float2(TargetPosition.x, -5);
                 }
-                if (_targetPositionProperty.ValueRW.Position.y >= 5)
+                if (TargetPosition.y >= 5)
                 {
-                    _targetPositionProperty.ValueRW.Position = new float2(_targetPositionProperty.ValueRW.Position.x, 5);
+                    TargetPosition = new float2(TargetPosition.x, 5);
                 }
             }
+            
     }
 }

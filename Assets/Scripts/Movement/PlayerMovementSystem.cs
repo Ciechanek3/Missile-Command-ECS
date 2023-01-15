@@ -34,7 +34,8 @@ namespace Movement
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
             var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
 
-            inputAspect.ModifyMovement(new float2(moveVector.x, moveVector.y));
+            inputAspect.Movement = new float2(moveVector.x, moveVector.y);
+            inputAspect.Shooting = spaceKey;
         }
     }
     

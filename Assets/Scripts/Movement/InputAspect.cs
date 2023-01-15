@@ -7,11 +7,16 @@ namespace Movement
     {
         public readonly RefRW<InputData> InputData;
 
-        public float2 Movement => InputData.ValueRW.Movement;
-
-        public void ModifyMovement(float2 movement)
+        public float2 Movement
         {
-            InputData.ValueRW.Movement = movement;
+            get => InputData.ValueRO.Movement;
+            set => InputData.ValueRW.Movement = value;
+        }
+
+        public float Shooting
+        {
+            get => InputData.ValueRO.Shoot;
+            set => InputData.ValueRW.Shoot = value;
         }
     }
 }

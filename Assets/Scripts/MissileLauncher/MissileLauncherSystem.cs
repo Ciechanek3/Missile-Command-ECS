@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Marker;
 using Math;
 using Movement;
+using Rocket;
+using RocketSpawner;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,88 +11,121 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 namespace MissileLauncher
 {
-    
+
     [UpdateAfter(typeof(MarkerSystem))]
-    public partial class MissileLauncherSystem : SystemBase
+    public partial struct MissileLauncherSystem : ISystem
     {
-        private bool _isDataCreated = false;
+        private bool _isDataCreated;
         private MissileLauncherAspect currentMissileLauncher;
         private MarkerAspect _markerAspect;
-        
-        [BurstCompile]
-        protected override void OnUpdate()
-        {
-            var deltaTime = SystemAPI.Time.DeltaTime;
-            var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
-            var ecb = ecbSingleton.CreateCommandBuffer(World.Unmanaged);
-            if (_isDataCreated == false)
-            {
-                _isDataCreated = true;
-                ChangeActiveLauncher(ecb, 1);
-                Entity markerProperties = SystemAPI.GetSingletonEntity<MarkerProperties>();
-                _markerAspect = SystemAPI.GetAspectRW<MarkerAspect>(markerProperties);
-            }
 
-            List<MissileLauncherAspect> tempMissileLaunchers = new List<MissileLauncherAspect>();
-            foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>().WithAll<ActiveLauncherTag>())
-            {
-                tempMissileLaunchers.Add(missileLauncher);
-                
-                missileLauncher.FireProjectile(ecb, deltaTime);
-            }
-            tempMissileLaunchers.Clear();
-            
-            Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
-            var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
-            
-            new MoveTargetJob
-            {
-                Direction = inputAspect.Movement
-            }.Run();
-        }
-        
         [BurstCompile]
-        public void ChangeActiveLauncher(EntityCommandBuffer ecbSingleton,int index)
+        public void ChangeActiveLauncher(EntityCommandBuffer ecbSingleton, int index)
         {
             List<MissileLauncherAspect> missileLauncherAspects = new List<MissileLauncherAspect>();
-            foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>())
+            /*foreach (var missileLauncher in SystemAPI.Query<MissileLauncherAspect>())
             {
                 ecbSingleton.RemoveComponent<ActiveLauncherTag>(missileLauncher.Entity);
                 missileLauncherAspects.Add(missileLauncher);
             }
                 
-            ecbSingleton.AddComponent<ActiveLauncherTag>(missileLauncherAspects[index].Entity);
+            ecbSingleton.AddComponent<ActiveLauncherTag>(missileLauncherAspects[index].Entity);*/
+        }
+
+        public void OnCreate(ref SystemState state)
+        {
+        }
+
+        public void OnDestroy(ref SystemState state)
+        {
+        }
+
+        public void OnUpdate(ref SystemState state)
+        {
+
+
+            /*if (_isDataCreated == false)
+            {
+                _isDataCreated = true;
+                ChangeActiveLauncher(ecb, 1);
+                Entity markerProperties = SystemAPI.GetSingletonEntity<MarkerProperties>();
+                _markerAspect = SystemAPI.GetAspectRW<MarkerAspect>(markerProperties);
+            }*/
+
+            var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
+            var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
+            var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
+            var deltaTime = SystemAPI.Time.DeltaTime;
+
+            new MoveTargetJob
+            {
+                Direction = inputAspect.Movement
+            }.Run();
+
+            Entity rsp = SystemAPI.GetSingletonEntity<MissileLauncherProperties>();
+
+            var rocketSpawner = SystemAPI.GetAspectRW<MissileLauncherAspect>(rsp);
+
+
+            if (inputAspect.Shooting != 0)
+            {
+                new FireProjectile()
+                {
+                    DeltaTime = deltaTime,
+                    Ecb = ecb,
+                    USTransform = rocketSpawner.GetMissileSpawnPoint()
+                }.Run();
+            }
+
         }
     }
-    
-    /*[BurstCompile]
+
     public partial struct FireProjectile : IJobEntity
     {
         public float DeltaTime;
-        public float ProjectileSpawnTimer;
-        public bool ShouldSpawnNewProjectile;
-        public bool CanFire;
-        public bool Cooldown;
-        public MissileLauncherAspect MissileLauncher;
         public EntityCommandBuffer Ecb;
         public UniformScaleTransform USTransform;
-        
+        public float2 Target;
+
         [BurstCompile]
-        private void Execute()
+        private void Execute(MissileLauncherAspect missileLauncherAspect)
         {
-            MissileLauncher.ProjectileSpawnTimer -= DeltaTime;
-            if (MissileLauncher.ShouldSpawnNewProjectile == false) return;
-            if (MissileLauncher.Fire() == false) return;
-            MissileLauncher.ProjectileSpawnTimer = MissileLauncher.Cooldown;
-            var newRocket = Ecb.Instantiate(MissileLauncher.ProjectileEntity);
-            Ecb.SetComponent(newRocket, new LocalToWorldTransform{ Value = USTransform});
-            Ecb.Playback(new EntityManager());
+            //missileLauncherAspect.ProjectileSpawnTimer -= DeltaTime;
+            //if (missileLauncherAspect.ShouldSpawnNewProjectile == false) return;
+            //if (missileLauncherAspect.Fire() == false) return;
+            //missileLauncherAspect.ProjectileSpawnTimer = missileLauncherAspect.Cooldown;
+            var newRocket = Ecb.Instantiate(missileLauncherAspect.ProjectileEntity);
+            Ecb.SetComponent(newRocket, new LocalToWorldTransform { Value = USTransform });
+            //Ecb.SetComponent(newRocket);
+            //Ecb.Playback(new EntityManager());
+
         }
-    }*/
-    
-    
-    
+    }
+
+    [BurstCompile]
+    public partial struct SpawnProjectileJob : IJobEntity
+    {
+        public float DeltaTime;
+        public EntityCommandBuffer Ecb;
+        public UniformScaleTransform USTransform;
+
+        [BurstCompile]
+        private void Execute(MissileLauncherAspect missileLauncherAspect)
+        {
+            Debug.Log("2");
+            missileLauncherAspect.ProjectileSpawnTimer -= DeltaTime;
+            if (missileLauncherAspect.ShouldSpawnNewProjectile == false) return;
+            if (missileLauncherAspect.Fire() == false) return;
+            missileLauncherAspect.ProjectileSpawnTimer = missileLauncherAspect.Cooldown;
+            var newRocket = Ecb.Instantiate(missileLauncherAspect.ProjectileEntity);
+            Ecb.SetComponent(newRocket, new LocalToWorldTransform { Value = USTransform });
+        }
+    }
+
 }
+
