@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace Projectile
 {
@@ -9,11 +10,22 @@ namespace Projectile
         public readonly Entity Entity;
         private readonly TransformAspect _transformAspect;
 
-        private readonly RefRO<ProjectileProperties> _projectileProperties;
+        private readonly RefRW<ProjectileProperties> _projectileProperties;
 
-        public void Fire(float2 destination)
+        private float2 Destination
         {
-            _transformAspect.TranslateWorld(new float3(destination.x, destination.y, 0));
+            get => _projectileProperties.ValueRO.Destination;
+            set => _projectileProperties.ValueRW.Destination = value;
+        }
+
+        public void Fire()
+        {
+            _transformAspect.TranslateWorld(new float3(Destination.x, Destination.y, 0));
+        }
+
+        public void SetDestination(float2 destination)
+        {
+            Destination = destination;
         }
     }
 }

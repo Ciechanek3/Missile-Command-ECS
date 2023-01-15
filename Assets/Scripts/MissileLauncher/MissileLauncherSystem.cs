@@ -20,7 +20,7 @@ namespace MissileLauncher
     public partial struct MissileLauncherSystem : ISystem
     {
         private bool _isDataCreated;
-        private MissileLauncherAspect currentMissileLauncher;
+        private MissileLauncherAspect _missileLauncherAspect;
         private MarkerAspect _markerAspect;
 
         [BurstCompile]
@@ -38,6 +38,9 @@ namespace MissileLauncher
 
         public void OnCreate(ref SystemState state)
         {
+            Entity mlp = SystemAPI.GetSingletonEntity<MissileLauncherProperties>();
+            _missileLauncherAspect = SystemAPI.GetAspectRW<MissileLauncherAspect>(mlp);
+            _missileLauncherAspect.ChangeCurrentLauncher(1);
         }
 
         public void OnDestroy(ref SystemState state)
@@ -67,18 +70,14 @@ namespace MissileLauncher
                 Direction = inputAspect.Movement
             }.Run();
 
-            Entity rsp = SystemAPI.GetSingletonEntity<MissileLauncherProperties>();
-
-            var rocketSpawner = SystemAPI.GetAspectRW<MissileLauncherAspect>(rsp);
-
 
             if (inputAspect.Shooting != 0)
             {
-                new FireProjectile()
+                new FireProjectile
                 {
                     DeltaTime = deltaTime,
                     Ecb = ecb,
-                    USTransform = rocketSpawner.GetMissileSpawnPoint()
+                    USTransform = _missileLauncherAspect.GetMissileSpawnPoint()
                 }.Run();
             }
 

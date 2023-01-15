@@ -4,6 +4,7 @@ using Projectile;
 using Rocket;
 using RocketSpawner;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -16,32 +17,45 @@ namespace MissileLauncher
         public readonly Entity Entity;
         public readonly TransformAspect TransformAspect;
 
-        private readonly RefRO<MissileLauncherProperties> _missileLauncherProperties;
-        private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
+        private readonly RefRW<MissileLauncherProperties> _missileLauncherProperties;
         private readonly RefRW<TargetPositionProperty> _targetPositionProperty;
-        private readonly RefRW<AmmoCounter> _ammoCounter;
+        private readonly RefRW<MissileLauncherIndex> _missileLauncherIndex;
+        private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
 
-        private float2 FirePosition => _missileLauncherProperties.ValueRO.FirePosition;
+        private NativeList<float2> FirePositions => _missileLauncherProperties.ValueRO.Positions;
 
         private float2 TargetPosition
         {
             get => _targetPositionProperty.ValueRO.Position;
             set => _targetPositionProperty.ValueRW.Position = value;
         }
+        public int CurrentLauncherIndex
+        {
+            get => _missileLauncherIndex.ValueRO.Index;
+            set => _missileLauncherIndex.ValueRW.Index = value;
+        }
+
+        public NativeList<float2> LaunchersFirePositions
+        {
+            get => _missileLauncherProperties.ValueRO.Positions;
+        }
+
+        public float Cooldown
+        {
+            get => _missileLauncherProperties.ValueRO.Cooldown;
+        }
+        public bool ShouldSpawnNewProjectile => ProjectileSpawnTimer <= 0f;
+        
+        public int Ammo
+        {
+            get => _missileLauncherProperties.ValueRO.Ammo;
+            set => _missileLauncherProperties.ValueRW.Ammo = value;
+        }
+
         public float ProjectileSpawnTimer
         {
             get => _projectileSpawnTimer.ValueRO.Timer;
             set => _projectileSpawnTimer.ValueRW.Timer = value;
-        }
-        
-        public bool ShouldSpawnNewProjectile => ProjectileSpawnTimer <= 0f;
-
-        
-        public float Cooldown => _missileLauncherProperties.ValueRO.Cooldown;
-        public int Ammo
-        {
-            get => _ammoCounter.ValueRO.Ammo;
-            set => _ammoCounter.ValueRW.Ammo = value;
         }
 
         public bool Fire()
@@ -50,11 +64,11 @@ namespace MissileLauncher
             {
                 return false;
             }
-            Ammo -= 1;
+            Ammo--;
             return true;
         }
 
-        public void FireProjectile(EntityCommandBuffer ecb, float deltaTime, InputAspect inputAspect)
+        public void FireProjectile(EntityCommandBuffer ecb, InputAspect inputAspect, float deltaTime)
         {
             ProjectileSpawnTimer -= deltaTime;
             if (ShouldSpawnNewProjectile == false) return;
@@ -74,13 +88,19 @@ namespace MissileLauncher
         
         public UniformScaleTransform GetMissileSpawnPoint()
         {
-            float3 startingPosition = new float3(FirePosition.x, FirePosition.y, 0);
+            float3 startingPosition = new float3(LaunchersFirePositions[CurrentLauncherIndex].x, 
+                                                LaunchersFirePositions[CurrentLauncherIndex].y, 0);
             return new UniformScaleTransform()
             {
                 Position = startingPosition,
                 Rotation = quaternion.identity,
                 Scale = 1f
             };
+        }
+
+        public void ChangeCurrentLauncher(int index)
+        {
+            CurrentLauncherIndex = index;
         }
         
         public void SetTarget(float2 direction)
