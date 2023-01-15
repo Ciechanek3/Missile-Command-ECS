@@ -35,17 +35,6 @@ namespace MissileLauncher
 
         public void OnUpdate(ref SystemState state)
         {
-            Entity mlp = SystemAPI.GetSingletonEntity<MissileLauncherProperties>();
-            _missileLauncherAspect = SystemAPI.GetAspectRW<MissileLauncherAspect>(mlp);
-
-            /*if (_isDataCreated == false)
-            {
-                _isDataCreated = true;
-                ChangeActiveLauncher(ecb, 1);
-                Entity markerProperties = SystemAPI.GetSingletonEntity<MarkerProperties>();
-                _markerAspect = SystemAPI.GetAspectRW<MarkerAspect>(markerProperties);
-            }*/
-
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
             var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
@@ -57,6 +46,16 @@ namespace MissileLauncher
                 Direction = inputAspect.Movement
             }.Run();
             
+            bool mlpExist = SystemAPI.TryGetSingletonEntity<MissileLauncherProperties>(out Entity mlp);
+            if (mlpExist)
+            {
+                _missileLauncherAspect = SystemAPI.GetAspectRW<MissileLauncherAspect>(mlp);
+            }
+            else
+            {
+                return;
+            }
+
             if (inputAspect.Shooting != 0)
             {
                 new FireProjectile
