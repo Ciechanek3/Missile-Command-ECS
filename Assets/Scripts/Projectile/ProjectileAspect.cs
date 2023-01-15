@@ -12,20 +12,35 @@ namespace Projectile
 
         private readonly RefRW<ProjectileProperties> _projectileProperties;
 
+
+        private float MovementSpeed => _projectileProperties.ValueRO.MovementSpeed;
         private float2 Destination
         {
             get => _projectileProperties.ValueRO.Destination;
             set => _projectileProperties.ValueRW.Destination = value;
         }
 
-        public void Fire()
+        public void Fire(float deltaTime)
         {
-            _transformAspect.TranslateWorld(new float3(Destination.x, Destination.y, 0));
+            _transformAspect.Position += _transformAspect.Up * MovementSpeed * deltaTime;
         }
 
         public void SetDestination(float2 destination)
         {
             Destination = destination;
+        }
+
+        public bool CheckIfOnDestination()
+        {
+            float2 position = new float2(_transformAspect.Position.x, _transformAspect.Position.y);
+            Debug.Log((math.round(position) == math.round(Destination)) + " " +  math.round(position) + " " + math.round(Destination));
+            if (math.all(math.round(position) == math.round(Destination)))
+            {
+                return true;
+            }
+            
+            return false;
+           
         }
     }
 }

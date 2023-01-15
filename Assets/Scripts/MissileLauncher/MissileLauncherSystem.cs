@@ -72,33 +72,13 @@ namespace MissileLauncher
 
     public partial struct FireProjectile : IJobEntity
     {
-        public float DeltaTime;
-        public EntityCommandBuffer Ecb;
-        public UniformScaleTransform USTransform;
-        public float2 Target;
         
-        private void Execute(MissileLauncherAspect missileLauncherAspect)
-        {
-            missileLauncherAspect.ProjectileSpawnTimer -= DeltaTime;
-            if (missileLauncherAspect.ShouldSpawnNewProjectile == false) return;
-            if (missileLauncherAspect.Fire() == false) return;
-            missileLauncherAspect.ProjectileSpawnTimer = missileLauncherAspect.Cooldown;
-            var newRocket = Ecb.Instantiate(missileLauncherAspect.ProjectileEntity);
-            Ecb.SetComponent(newRocket, new LocalToWorldTransform { Value = USTransform });
-        }
-    }
-
-    [BurstCompile]
-    public partial struct SpawnProjectileJob : IJobEntity
-    {
         public float DeltaTime;
         public EntityCommandBuffer Ecb;
         public UniformScaleTransform USTransform;
 
-        [BurstCompile]
         private void Execute(MissileLauncherAspect missileLauncherAspect)
         {
-            Debug.Log("2");
             missileLauncherAspect.ProjectileSpawnTimer -= DeltaTime;
             if (missileLauncherAspect.ShouldSpawnNewProjectile == false) return;
             if (missileLauncherAspect.Fire() == false) return;
@@ -107,6 +87,5 @@ namespace MissileLauncher
             Ecb.SetComponent(newRocket, new LocalToWorldTransform { Value = USTransform });
         }
     }
-
 }
 

@@ -13,11 +13,15 @@ namespace Projectile
         [BurstCompile]
         protected override void OnUpdate()
         {
+            var mp = SystemAPI.GetSingletonEntity<MarkerProperties>();
+            var markerAspect = SystemAPI.GetAspectRW<MarkerAspect>(mp);
+            var deltaTime = SystemAPI.Time.DeltaTime;
             
-            /*(new FireProjectileJob
+            new FireProjectileJob
             {
-                //Destination = destination
-            }.Run();*/
+                Destination = markerAspect.Position,
+                DeltaTime = deltaTime
+            }.Run();
         }
         
     }
@@ -26,11 +30,14 @@ namespace Projectile
     public partial struct FireProjectileJob : IJobEntity
     {
         public float2 Destination;
+        public float DeltaTime;
         
         [BurstCompile]
         private void Execute(ProjectileAspect projectile)
         {
-            projectile.SetDestination(Destination);
+            if (projectile.CheckIfOnDestination()) return;
+                projectile.SetDestination(Destination);
+            projectile.Fire(DeltaTime);
         }
     }
 }

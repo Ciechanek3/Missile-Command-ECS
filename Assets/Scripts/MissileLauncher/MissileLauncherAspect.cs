@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Math;
 using Movement;
 using Projectile;
 using Rocket;
@@ -54,24 +55,9 @@ namespace MissileLauncher
             {
                 return false;
             }
+
             Ammo--;
             return true;
-        }
-
-        public void FireProjectile(EntityCommandBuffer ecb, InputAspect inputAspect, float deltaTime)
-        {
-            ProjectileSpawnTimer -= deltaTime;
-            if (ShouldSpawnNewProjectile == false) return;
-            if (inputAspect.Shooting == 0) return;
-            if (Fire() == false) return;
-            ProjectileSpawnTimer = Cooldown;
-            var newProjectile = ecb.Instantiate(ProjectileEntity);
-            ecb.SetComponent(newProjectile, new LocalToWorldTransform{ Value = GetMissileSpawnPoint()});
-            ecb.AddComponent(newProjectile, new TargetPositionProperty
-            {
-                Position = _targetPositionProperty.ValueRW.Position
-            });
-            
         }
 
         public Entity ProjectileEntity => _missileLauncherProperties.ValueRO.ProjectilePrefab;
@@ -79,11 +65,13 @@ namespace MissileLauncher
         public UniformScaleTransform GetMissileSpawnPoint()
         {
             float3 startingPosition = new float3(FirePosition.x, FirePosition.y, 0);
+            float3 targetPosition = new float3(TargetPosition.x, TargetPosition.y, 0);
+            float rotation = MathHelpers.GetDirection(startingPosition, targetPosition);
             return new UniformScaleTransform()
             {
                 Position = startingPosition,
-                Rotation = quaternion.identity,
-                Scale = 1f
+                Rotation = quaternion.RotateZ(-rotation),
+                Scale = 0.2f
             };
         }
 
