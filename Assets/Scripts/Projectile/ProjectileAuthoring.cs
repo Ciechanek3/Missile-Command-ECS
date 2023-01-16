@@ -1,19 +1,23 @@
-using Projectile;
 using Unity.Entities;
 using UnityEngine;
 
-public class ProjectileAuthoring : MonoBehaviour
+namespace Projectile
 {
-    public float movementSpeed;
-}
-
-public class ProjectileBaker : Baker<ProjectileAuthoring>
-{
-    public override void Bake(ProjectileAuthoring authoring)
+    public class ProjectileAuthoring : MonoBehaviour
     {
-        AddComponent(new ProjectileProperties
+        public float movementSpeed;
+        public GameObject explosionPrefab;
+    }
+
+    public class ProjectileBaker : Baker<ProjectileAuthoring>
+    {
+        public override void Bake(ProjectileAuthoring authoring)
         {
-            MovementSpeed = authoring.movementSpeed
-        });
+            AddComponent(new ProjectileProperties
+            {
+                ExplosionPrefab = GetEntity(authoring.explosionPrefab),
+                MovementSpeed = authoring.movementSpeed
+            });
+        }
     }
 }

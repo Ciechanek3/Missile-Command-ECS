@@ -1,7 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace Projectile
 {
@@ -12,13 +11,14 @@ namespace Projectile
 
         private readonly RefRW<ProjectileProperties> _projectileProperties;
 
-
         private float MovementSpeed => _projectileProperties.ValueRO.MovementSpeed;
         private float2 Destination
         {
             get => _projectileProperties.ValueRO.Destination;
             set => _projectileProperties.ValueRW.Destination = value;
         }
+        
+        public Entity ExplosionEntity => _projectileProperties.ValueRO.ExplosionPrefab;
 
         public void Fire(float deltaTime)
         {
@@ -32,15 +32,25 @@ namespace Projectile
 
         public bool CheckIfOnDestination()
         {
-            float2 position = new float2(_transformAspect.Position.x, _transformAspect.Position.y);
-            Debug.Log((math.round(position) == math.round(Destination)) + " " +  math.round(position) + " " + math.round(Destination));
-            if (math.all(math.round(position) == math.round(Destination)))
+            if (System.Math.Abs(_transformAspect.Position.x - Destination.x) < 0.01)
             {
-                return true;
+                if (System.Math.Abs(_transformAspect.Position.y - Destination.y) < 0.01)
+                {
+                    return true; 
+                }
             }
             
             return false;
-           
+        }
+
+        public UniformScaleTransform GetProjectilePosition()
+        {
+            return new UniformScaleTransform()
+            {
+                Position = _transformAspect.Position,
+                Rotation = quaternion.identity,
+                Scale = 1f,
+            };
         }
     }
 }

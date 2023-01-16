@@ -44,15 +44,6 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""ChangeTower"",
-                    ""type"": ""Button"",
-                    ""id"": ""6423114e-126b-4223-8482-f6315495271d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -121,39 +112,6 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""add1b817-5ef9-48e7-98a0-fce1055c571e"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ChangeTower"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6509f75c-3dc8-49fa-b4d8-bcf8dcc37bb5"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ChangeTower"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c56acb52-7cd1-406c-8c1c-c006a38a8ae8"",
-                    ""path"": ""<Keyboard>/3"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ChangeTower"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -164,7 +122,6 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
         m_movement = asset.FindActionMap("movement", throwIfNotFound: true);
         m_movement_Move = m_movement.FindAction("Move", throwIfNotFound: true);
         m_movement_Shoot = m_movement.FindAction("Shoot", throwIfNotFound: true);
-        m_movement_ChangeTower = m_movement.FindAction("ChangeTower", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -226,14 +183,12 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
     private IMovementActions m_MovementActionsCallbackInterface;
     private readonly InputAction m_movement_Move;
     private readonly InputAction m_movement_Shoot;
-    private readonly InputAction m_movement_ChangeTower;
     public struct MovementActions
     {
         private @PlayerMovement m_Wrapper;
         public MovementActions(@PlayerMovement wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_movement_Move;
         public InputAction @Shoot => m_Wrapper.m_movement_Shoot;
-        public InputAction @ChangeTower => m_Wrapper.m_movement_ChangeTower;
         public InputActionMap Get() { return m_Wrapper.m_movement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -249,9 +204,6 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
                 @Shoot.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnShoot;
-                @ChangeTower.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnChangeTower;
-                @ChangeTower.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnChangeTower;
-                @ChangeTower.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnChangeTower;
             }
             m_Wrapper.m_MovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -262,9 +214,6 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
-                @ChangeTower.started += instance.OnChangeTower;
-                @ChangeTower.performed += instance.OnChangeTower;
-                @ChangeTower.canceled += instance.OnChangeTower;
             }
         }
     }
@@ -273,6 +222,5 @@ public partial class @PlayerMovement : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
-        void OnChangeTower(InputAction.CallbackContext context);
     }
 }

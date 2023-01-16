@@ -5,6 +5,7 @@ namespace Projectile
 {
     public struct ProjectileProperties : IComponentData
     {
+        public Entity ExplosionPrefab;
         public float MovementSpeed;
         public float2 Destination;
     }

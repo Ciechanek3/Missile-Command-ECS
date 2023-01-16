@@ -22,7 +22,7 @@ namespace MissileLauncher
         private bool _isDataCreated;
         private MissileLauncherAspect _missileLauncherAspect;
         private MarkerAspect _markerAspect;
-        private float time;
+        private float _time;
 
         public void OnCreate(ref SystemState state)
         {
@@ -39,7 +39,7 @@ namespace MissileLauncher
             var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
             var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
-            time += SystemAPI.Time.DeltaTime;
+            _time += SystemAPI.Time.DeltaTime;
 
             new MoveTargetJob
             {
@@ -60,11 +60,11 @@ namespace MissileLauncher
             {
                 new FireProjectile
                 {
-                    DeltaTime = time,
+                    DeltaTime = _time,
                     Ecb = ecb,
                     USTransform = _missileLauncherAspect.GetMissileSpawnPoint()
                 }.Run();
-                time = 0;
+                _time = 0;
             }
 
         }
