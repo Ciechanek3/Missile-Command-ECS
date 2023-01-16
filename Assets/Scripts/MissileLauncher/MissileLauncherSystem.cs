@@ -15,7 +15,7 @@ using UnityEngine.InputSystem.Controls;
 
 namespace MissileLauncher
 {
-
+    [BurstCompile]
     [UpdateAfter(typeof(MarkerSystem))]
     public partial struct MissileLauncherSystem : ISystem
     {
@@ -24,15 +24,19 @@ namespace MissileLauncher
         private MarkerAspect _markerAspect;
         private float _time;
 
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             
         }
 
+        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
+            
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
@@ -70,6 +74,7 @@ namespace MissileLauncher
         }
     }
 
+    [BurstCompile]
     public partial struct FireProjectile : IJobEntity
     {
         
@@ -77,6 +82,7 @@ namespace MissileLauncher
         public EntityCommandBuffer Ecb;
         public UniformScaleTransform USTransform;
 
+        [BurstCompile]
         private void Execute(MissileLauncherAspect missileLauncherAspect)
         {
             missileLauncherAspect.ProjectileSpawnTimer -= DeltaTime;

@@ -27,8 +27,6 @@ namespace Movement
 
             
             UnityEngine.Vector2 moveVector = _movement.movement.Move.ReadValue<UnityEngine.Vector2>();
-            float hAxis = moveVector.x;
-            float vAxis = moveVector.y;
             float spaceKey = _movement.movement.Shoot.ReadValue<float>();
 
             Entity inputData = SystemAPI.GetSingletonEntity<InputData>();

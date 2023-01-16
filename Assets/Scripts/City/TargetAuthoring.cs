@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
-using City;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class TargetAuthoring : MonoBehaviour
+namespace City
 {
-    public float2 offset;
-}
-
-public class TargetBaker : Baker<TargetAuthoring>
-{
-    public override void Bake(TargetAuthoring authoring)
+    public class TargetAuthoring : MonoBehaviour
     {
-        AddComponent<TargetTag>();
+        public float2 offset;
+    }
+
+    public class TargetBaker : Baker<TargetAuthoring>
+    {
+        public override void Bake(TargetAuthoring authoring)
+        {
+            AddComponent<TargetTag>();
+        }
     }
 }

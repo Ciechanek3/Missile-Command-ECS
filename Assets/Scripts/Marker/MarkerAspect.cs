@@ -7,7 +7,7 @@ namespace Marker
 {
     public readonly partial struct MarkerAspect : IAspect
     {
-        public readonly Entity Entity;
+        private readonly Entity _entity;
         public readonly TransformAspect TransformAspect;
 
         private readonly RefRO<MarkerProperties> _markerProperties;

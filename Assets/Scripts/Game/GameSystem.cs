@@ -9,19 +9,24 @@ using UnityEngine;
 
 namespace Game
 {
+    [BurstCompile]
     public partial struct GameSystem : ISystem
     {
         private bool _gameFinished;
+        
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
         
         }
 
+        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
         
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             Entity gt = SystemAPI.GetSingletonEntity<GameTag>();
@@ -56,17 +61,16 @@ namespace Game
                 {
                     Ecb = ecb,
                 }.Run();
-                
-                Entity inputData = SystemAPI.GetSingletonEntity<InputData>();
-                var inputAspect = SystemAPI.GetAspectRW<InputAspect>(inputData);
             }
         }
     }
     
+    [BurstCompile]
     public partial struct ShowGameOver : IJobEntity
     {
         public EntityCommandBuffer Ecb;
 
+        [BurstCompile]
         private void Execute(GameAspect gameAspect)
         {
             Ecb.Instantiate(gameAspect.GameOverEntity);

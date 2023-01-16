@@ -6,8 +6,8 @@ namespace Game
 {
     public readonly partial struct GameAspect : IAspect
     {
-        public readonly Entity Entity;
-        public readonly TransformAspect TransformAspect;
+        private readonly Entity _entity;
+        private readonly TransformAspect _transformAspect;
 
         private readonly RefRO<GameTag> _gameTag;
         private readonly RefRW<TimerData> _gameTimer;

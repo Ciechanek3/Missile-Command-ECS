@@ -45,7 +45,6 @@ namespace Collision
                 {
 
                     float3 rocketPosition = MathHelpers.TransformAspectToFloat3(rocket.TransformAspect);
-                    float3 targetPosition = rocketSpawner.Targets[i];
 
                     foreach (var target in SystemAPI.Query<TargetAspect>())
                     {
@@ -92,8 +91,6 @@ namespace Collision
 
                 }
             }
-
-
         }
     }
 }

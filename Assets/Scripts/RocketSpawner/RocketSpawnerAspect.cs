@@ -10,7 +10,7 @@ namespace RocketSpawner
 {
     public readonly partial struct RocketSpawnerAspect : IAspect
     {
-        public readonly Entity Entity;
+        private readonly Entity _entity;
 
         private readonly TransformAspect _transformAspect;
         private readonly RefRO<RocketSpawnerProperties> _rocketSpawnerProperties;

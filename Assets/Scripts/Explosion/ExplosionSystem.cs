@@ -9,16 +9,19 @@ namespace Explosion
     [UpdateAfter(typeof(ProjectileSystem))]
     public partial struct ExplosionSystem : ISystem
     {
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
 
         }
 
+        [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
 
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             float time = SystemAPI.Time.DeltaTime;

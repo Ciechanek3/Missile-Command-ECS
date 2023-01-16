@@ -35,7 +35,6 @@ namespace MissileLauncher
             {
                 Position = new float2(0,0)
             });
-            AddComponent<MissileLauncherIndex>();
             AddComponent<TimerData>();
         }
     }
