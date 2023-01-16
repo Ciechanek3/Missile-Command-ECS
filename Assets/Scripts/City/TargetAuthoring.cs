@@ -14,10 +14,6 @@ public class TargetBaker : Baker<TargetAuthoring>
 {
     public override void Bake(TargetAuthoring authoring)
     {
-        AddComponent(new TargetTag
-        {
-            Position = authoring.gameObject.transform.position,
-            Offset = authoring.offset
-        });
+        AddComponent<TargetTag>();
     }
 }

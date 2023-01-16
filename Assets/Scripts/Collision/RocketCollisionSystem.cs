@@ -32,7 +32,7 @@ namespace Collision
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            Entity rsp = SystemAPI.GetSingletonEntity<RocketSpawnerProperties>();
+            if(!SystemAPI.TryGetSingletonEntity<RocketSpawnerProperties>(out Entity rsp)) return;
             var rocketSpawner = SystemAPI.GetAspectRW<RocketSpawnerAspect>(rsp);
 
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();

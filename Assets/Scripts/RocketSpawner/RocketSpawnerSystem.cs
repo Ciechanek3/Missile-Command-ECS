@@ -26,7 +26,7 @@ namespace RocketSpawner
             var deltaTime = SystemAPI.Time.DeltaTime;
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
 
-            Entity rsp = SystemAPI.GetSingletonEntity<RocketSpawnerProperties>();
+            if (!SystemAPI.TryGetSingletonEntity<RocketSpawnerProperties>(out Entity rsp)) return;
             var rocketSpawner = SystemAPI.GetAspectRW<RocketSpawnerAspect>(rsp);
             
             new SpawnRocketJob
