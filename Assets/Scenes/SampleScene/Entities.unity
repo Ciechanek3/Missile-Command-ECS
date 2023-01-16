@@ -716,10 +716,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7612542485316161116, guid: c487cf5d94fc00b4d84ae07e72d072dc, type: 3}
-      propertyPath: initialAmmo
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 7867123299413152342, guid: c487cf5d94fc00b4d84ae07e72d072dc, type: 3}
       propertyPath: m_IsActive
       value: 1

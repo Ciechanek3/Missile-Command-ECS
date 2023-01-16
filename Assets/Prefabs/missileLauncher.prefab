@@ -232,5 +232,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   missileLauncherFirePosition: {fileID: 7617068659879119243}
   projectilePrefab: {fileID: 7572054048268066208, guid: a15b75c433de9b0459242a32a7bb6087, type: 3}
-  initialAmmo: 2
+  initialAmmo: 20
   cooldown: 1
