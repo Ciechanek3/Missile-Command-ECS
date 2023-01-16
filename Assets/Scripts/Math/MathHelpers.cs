@@ -26,7 +26,7 @@ namespace Math
             return convertedTransform;
         }
 
-        public static bool CheckIfFloatIsInArea(float3 objectPosition, float3 targetPosition, float2 offset)
+        public static bool CheckIfFloatIsInSquareArea(float3 objectPosition, float3 targetPosition, float2 offset)
         {
             if (objectPosition.x - targetPosition.x <= offset.x && objectPosition.x - targetPosition.x >= -offset.x)
             {

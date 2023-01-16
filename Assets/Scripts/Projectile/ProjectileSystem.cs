@@ -47,7 +47,7 @@ namespace Projectile
                     new MakeExplosionJob
                     {
                         Ecb = ecb,
-                    }.Run();
+                    }.Schedule();
                 }
             }
         }

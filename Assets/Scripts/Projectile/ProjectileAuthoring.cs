@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Projectile
@@ -16,7 +17,8 @@ namespace Projectile
             AddComponent(new ProjectileProperties
             {
                 ExplosionPrefab = GetEntity(authoring.explosionPrefab),
-                MovementSpeed = authoring.movementSpeed
+                MovementSpeed = authoring.movementSpeed,
+                Destination = new float2(0, 0)
             });
         }
     }

@@ -27,14 +27,17 @@ namespace Projectile
 
         public void SetDestination(float2 destination)
         {
-            Destination = destination;
+            if (Destination.x == 0 && Destination.y == 0)
+            {
+                Destination = destination;
+            }
         }
 
         public bool CheckIfOnDestination()
         {
-            if (System.Math.Abs(_transformAspect.Position.x - Destination.x) < 0.01)
+            if (System.Math.Abs(_transformAspect.Position.x - Destination.x) < 0.1)
             {
-                if (System.Math.Abs(_transformAspect.Position.y - Destination.y) < 0.01)
+                if (System.Math.Abs(_transformAspect.Position.y - Destination.y) < 0.1)
                 {
                     return true; 
                 }

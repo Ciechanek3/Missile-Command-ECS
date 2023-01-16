@@ -48,7 +48,7 @@ namespace Collision
                     foreach (var target in SystemAPI.Query<TargetAspect>())
                     {
                         float3 objectPosition = MathHelpers.TransformAspectToFloat3(target.TransformAspect);
-                        if (MathHelpers.CheckIfFloatIsInArea(rocketPosition, objectPosition, rocketSpawner.TargetsOffset))
+                        if (MathHelpers.CheckIfFloatIsInSquareArea(rocketPosition, objectPosition, rocketSpawner.TargetsOffset))
                         {
                             ecb.DestroyEntity(target.Entity);
                         }

@@ -19,7 +19,7 @@ namespace Collision
         [BurstCompile]
         private void Execute()
         {
-            if (MathHelpers.CheckIfFloatIsInArea(EntityPosition, TargetPosition, Offset))
+            if (MathHelpers.CheckIfFloatIsInSquareArea(EntityPosition, TargetPosition, Offset))
             {
                 Ecb.DestroyEntity(Entity);
                 
