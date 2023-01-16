@@ -15,7 +15,7 @@ namespace Rocket
         public float2 targetsOffset;
         public float2 spawnArea;
         public GameObject rocketPrefab;
-        public uint randomSeed;
+        public float randomSeed;
         public float spawnDelay;
     }
     
@@ -34,9 +34,10 @@ namespace Rocket
                 RocketPrefab =  GetEntity(authoring.rocketPrefab),
                 SpawnDelay = authoring.spawnDelay
             });
+            float randomSeed = UnityEngine.Random.Range(0, authoring.randomSeed);
             AddComponent(new RocketSpawnerRandom
             {
-                Seed = Random.CreateFromIndex(authoring.randomSeed)
+                Seed = Random.CreateFromIndex((uint)randomSeed)
             });
             AddComponent<TimerData>();
             AddComponent(new TargetsData
