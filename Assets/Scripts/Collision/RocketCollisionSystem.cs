@@ -1,5 +1,7 @@
 using City;
+using Explosion;
 using Math;
+using Projectile;
 using Rocket;
 using RocketSpawner;
 using Unity.Burst;
@@ -18,13 +20,13 @@ namespace Collision
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-        
+
         }
 
         [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
-        
+
         }
 
         [BurstCompile]
@@ -32,43 +34,66 @@ namespace Collision
         {
             Entity rsp = SystemAPI.GetSingletonEntity<RocketSpawnerProperties>();
             var rocketSpawner = SystemAPI.GetAspectRW<RocketSpawnerAspect>(rsp);
-            
+
             var ecbSingleton = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>();
             var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
-            
-            
+
+
             foreach (var rocket in SystemAPI.Query<RocketAspect>())
             {
                 for (int i = 0; i < rocketSpawner.Targets.Length; i++)
                 {
-                    
+
                     float3 rocketPosition = MathHelpers.TransformAspectToFloat3(rocket.TransformAspect);
                     float3 targetPosition = rocketSpawner.Targets[i];
 
                     foreach (var target in SystemAPI.Query<TargetAspect>())
                     {
                         float3 objectPosition = MathHelpers.TransformAspectToFloat3(target.TransformAspect);
-                        if (MathHelpers.CheckIfFloatIsInSquareArea(rocketPosition, objectPosition, rocketSpawner.TargetsOffset))
+                        if (MathHelpers.CheckIfFloatIsInSquareArea(rocketPosition, objectPosition,
+                                rocketSpawner.TargetsOffset))
                         {
                             ecb.DestroyEntity(target.Entity);
+                            new DestroyEntityJob
+                            {
+                                Ecb = ecb,
+                                Entity = rocket.Entity,
+                            }.Run();
                         }
                     }
-                    
-                    new DestroyRocketJob
+
+                    foreach (var projectile in SystemAPI.Query<ProjectileAspect>())
                     {
-                        Ecb = ecb,
-                        Entity = rocket.Entity,
-                        EntityPosition = rocketPosition,
-                        TargetPosition = targetPosition,
-                        Offset = rocketSpawner.TargetsOffset
-                    }.Run();
-                    
-                    
+                        float3 objectPosition = MathHelpers.TransformAspectToFloat3(projectile.TransformAspect);
+                        if (MathHelpers.CheckIfFloatIsInCircleArea(rocketPosition, objectPosition,
+                                0.2f))
+                        {
+                            new DestroyEntityJob
+                            {
+                                Ecb = ecb,
+                                Entity = rocket.Entity,
+                            }.Run();
+                        }
+                    }
+
+                    foreach (var explosion in SystemAPI.Query<ExplosionAspect>())
+                    {
+                        float3 objectPosition = MathHelpers.TransformAspectToFloat3(explosion.TransformAspect);
+                        if (MathHelpers.CheckIfFloatIsInCircleArea(rocketPosition, objectPosition,
+                                0.6f))
+                        {
+                            new DestroyEntityJob
+                            {
+                                Ecb = ecb,
+                                Entity = rocket.Entity,
+                            }.Run();
+                        }
+                    }
+
                 }
-
             }
-        }
 
-        
+
+        }
     }
 }

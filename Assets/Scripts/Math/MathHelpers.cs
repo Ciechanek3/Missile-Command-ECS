@@ -1,4 +1,3 @@
-using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -37,6 +36,11 @@ namespace Math
             }
 
             return false;
+        }
+
+        public static bool CheckIfFloatIsInCircleArea(float3 objectPosition, float3 targetPosition, float circleRadius)
+        {
+            return math.distancesq(objectPosition, targetPosition) < circleRadius;
         }
     }
 }

@@ -2,8 +2,7 @@ using Unity.Entities;
 
 namespace Explosion
 {
-    public struct ExplosionData : IComponentData
+    public struct ExplosionTag : IComponentData
     {
-    
     }
 }

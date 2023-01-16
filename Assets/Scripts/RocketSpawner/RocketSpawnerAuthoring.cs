@@ -38,7 +38,7 @@ namespace Rocket
             {
                 Seed = Random.CreateFromIndex(authoring.randomSeed)
             });
-            AddComponent<ProjectileSpawnTimer>();
+            AddComponent<TimerData>();
             AddComponent(new TargetsData
             {
                 Targets = targets,

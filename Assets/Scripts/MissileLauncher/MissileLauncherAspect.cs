@@ -21,7 +21,7 @@ namespace MissileLauncher
         private readonly RefRW<MissileLauncherProperties> _missileLauncherProperties;
         private readonly RefRW<TargetPositionProperty> _targetPositionProperty;
         private readonly RefRW<MissileLauncherIndex> _missileLauncherIndex;
-        private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
+        private readonly RefRW<TimerData> _projectileSpawnTimer;
 
         private float2 FirePosition => _missileLauncherProperties.ValueRO.Position;
 

@@ -6,8 +6,8 @@ namespace Projectile
 {
     public class ProjectileAuthoring : MonoBehaviour
     {
-        public float movementSpeed;
         public GameObject explosionPrefab;
+        public float movementSpeed;
     }
 
     public class ProjectileBaker : Baker<ProjectileAuthoring>
@@ -18,7 +18,7 @@ namespace Projectile
             {
                 ExplosionPrefab = GetEntity(authoring.explosionPrefab),
                 MovementSpeed = authoring.movementSpeed,
-                Destination = new float2(0, 0)
+                Destination = new float2(0, 0),
             });
         }
     }

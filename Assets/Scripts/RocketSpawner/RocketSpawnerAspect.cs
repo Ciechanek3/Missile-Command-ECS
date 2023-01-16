@@ -16,7 +16,7 @@ namespace RocketSpawner
         private readonly RefRO<RocketSpawnerProperties> _rocketSpawnerProperties;
         private readonly RefRO<TargetsData> _targetsData;
         private readonly RefRW<RocketSpawnerRandom> _rocketSpawnerRandom;
-        private readonly RefRW<ProjectileSpawnTimer> _projectileSpawnTimer;
+        private readonly RefRW<TimerData> _projectileSpawnTimer;
 
         public float SpawnDelay => _rocketSpawnerProperties.ValueRO.SpawnDelay;
 

@@ -7,7 +7,7 @@ namespace Projectile
     public readonly partial struct ProjectileAspect : IAspect
     {
         public readonly Entity Entity;
-        private readonly TransformAspect _transformAspect;
+        public readonly TransformAspect TransformAspect;
 
         private readonly RefRW<ProjectileProperties> _projectileProperties;
 
@@ -22,7 +22,7 @@ namespace Projectile
 
         public void Fire(float deltaTime)
         {
-            _transformAspect.Position += _transformAspect.Up * MovementSpeed * deltaTime;
+            TransformAspect.Position += TransformAspect.Up * MovementSpeed * deltaTime;
         }
 
         public void SetDestination(float2 destination)
@@ -35,9 +35,9 @@ namespace Projectile
 
         public bool CheckIfOnDestination()
         {
-            if (System.Math.Abs(_transformAspect.Position.x - Destination.x) < 0.1)
+            if (System.Math.Abs(TransformAspect.Position.x - Destination.x) < 0.1)
             {
-                if (System.Math.Abs(_transformAspect.Position.y - Destination.y) < 0.1)
+                if (System.Math.Abs(TransformAspect.Position.y - Destination.y) < 0.1)
                 {
                     return true; 
                 }
@@ -50,9 +50,9 @@ namespace Projectile
         {
             return new UniformScaleTransform()
             {
-                Position = _transformAspect.Position,
+                Position = TransformAspect.Position,
                 Rotation = quaternion.identity,
-                Scale = 1f,
+                Scale = 1f
             };
         }
     }
